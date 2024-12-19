@@ -1,0 +1,69 @@
+
+services:
+  postgre:
+    container_name: postgre
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    env_file:
+      - ./app/.env
+    networks:
+      - payment-bot
+
+  bot:
+    container_name: bot
+    build: 
+      context: ./app
+      dockerfile: dockerfiles/backend.dockerfile
+    restart: always
+    volumes:
+      - ./app:/app
+    networks:
+      - payment-bot
+    env_file:
+      - ./app/.env
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - payment-bot
+
+  celery-worker:
+    container_name: celery-worker
+    build: 
+      context: ./app
+      dockerfile: dockerfiles/backend.dockerfile
+    restart: always
+    volumes:
+      - ./app:/app
+    networks:
+      - payment-bot
+    env_file:
+      - ./app/.env
+    command: celery -A bot.subscription.tasks worker --loglevel=info
+
+  celery-beat:
+    container_name: celery-beat
+    build: 
+      context: ./app
+      dockerfile: dockerfiles/backend.dockerfile
+    restart: always
+    volumes:
+      - ./app:/app
+    networks:
+      - payment-bot
+    env_file:
+      - ./app/.env
+    command: celery -A bot.subscription.tasks beat --loglevel=info
+
+networks:
+  payment-bot:
+    driver: bridge
+  

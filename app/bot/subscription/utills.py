@@ -36,11 +36,20 @@ class SubscriptionHandler:
                 data["customer_name"] = text.split("ФИО покупателя")[1].split("\n")[0].strip()
             if "ИИН/БИН продавца" in text:
                 data["iin_bin"] = text.split("ИИН/БИН продавца")[1].split("\n")[0].strip()
+            date_match = re.search(r'Дата и время\s*(?:по [\w\s]+)?([\d\.\: ]+)', text)
+
+            if date_match:
+                data["payment_date"] = date_match.group(1)
+
+                date_time_str = date_match.group(1)
+                date_time = datetime.strptime(date_time_str, '%d.%m.%Y %H:%M:%S')
+                current_month = datetime.now().month
+                if date_time.month != current_month:
+                    return False, "Дата платежа не соответствует текущему месяцу. Пожалуйста, проверьте дату платежа."
             
             price_match = re.search(r"(\d[\d\s]*)₸", text)
             if price_match:
                 data["price"] = int(re.sub(r"\s", "", price_match.group(1)))
-
 
             if subscription_type == "month":
                 if data["price"] < 1490:

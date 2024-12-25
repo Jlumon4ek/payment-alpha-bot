@@ -96,12 +96,7 @@ class SubscriptionHandler:
             return True, data
                     
         except Exception as e:
-            await bot.send_message(
-                chat_id='1282149137',
-                text=f"Ошибка при обработке файла {e}, User: {telegram_id}",
-            )
-
-            return False, f"Ошибка при обработке файла."
+            return False, f"Ошибка при обработке файла. {e}"
 
 
         

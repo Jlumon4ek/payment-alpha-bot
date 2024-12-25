@@ -43,7 +43,12 @@ class SubscriptionHandler:
                 data["payment_date"] = date_match.group(1)
 
                 date_time_str = date_match.group(1)
-                date_time = datetime.strptime(date_time_str, '%d.%m.%Y %H:%M:%S')
+
+                try:
+                    date_time = datetime.strptime(date_time_str, '%d.%m.%Y %H:%M:%S')
+                except ValueError:
+                    date_time = datetime.strptime(date_time_str, '%d.%m.%Y %H:%M')
+
                 current_month = datetime.now().month
                 if date_time.month != current_month:
                     return False, "Дата платежа не соответствует текущему месяцу. Пожалуйста, проверьте дату платежа."

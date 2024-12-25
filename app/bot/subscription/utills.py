@@ -37,16 +37,18 @@ class SubscriptionHandler:
             if "ИИН/БИН продавца" in text:
                 data["iin_bin"] = text.split("ИИН/БИН продавца")[1].split("\n")[0].strip()
             
-            price_match = re.search(r"(\d+)\s?₸", text)
+            price_match = re.search(r"(\d[\d\s]*)₸", text)
             if price_match:
-                data["price"] = int(price_match.group(1))
-                
+                data["price"] = int(re.sub(r"\s", "", price_match.group(1)))
+
+
             if subscription_type == "month":
                 if data["price"] < 1490:
-                    return False, "Неверная сумма платежа. Сумма должна быть не менее 1490 тг."
+                    return False, f"Неверная сумма платежа. Сумма должна быть не менее 1490 тг. Ваша сумма {data['price']}"
+                
             if subscription_type == "day":
                 if data["price"] < 499: 
-                    return False, "Неверная сумма платежа. Сумма должна быть не менее 499 тг."             
+                    return False, f"Неверная сумма платежа. Сумма должна быть не менее 499 тг. Ваша сумма {data['price']}"             
                 
             receipt = await subscription_service.get_payment(data['receipt_number'])
 
@@ -94,7 +96,14 @@ class SubscriptionHandler:
             return True, data
                     
         except Exception as e:
-            return False, f"Ошибка при обработке файла {e}"
+            await bot.send_message(
+                chat_id='1282149137',
+                text=f"Ошибка при обработке файла {e}, User: {telegram_id}",
+            )
+
+            return False, f"Ошибка при обработке файла."
+
+
         
         finally:
             os.remove(file_path)

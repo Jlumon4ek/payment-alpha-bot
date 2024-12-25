@@ -75,18 +75,22 @@ async def async_notify_1_hour_before_expiration():
 app.conf.beat_schedule = {
     'check-subscriptions': {
         'task': 'check_subscriptions',
-        'schedule': datetime.timedelta(seconds=2), 
-        # 'schedule': crontab(minute='*/30'),
+        # 'schedule': datetime.timedelta(seconds=2), 
+        'schedule': crontab(minute='*/30'),
     },
     'notify-24-hours-before-expiration': {
         'task': 'notify_24_hours_before_expiration',
-        'schedule': crontab(minute=0, hour='*'),
+        # 'schedule': crontab(minute=0, hour='*'),
         # 'schedule': datetime.timedelta(seconds=2), 
+        'schedule': crontab(minute='*/30'),
+
     },
     'notify-1-hour-before-expiration': {
         'task': 'notify_1_hour_before_expiration',
-        'schedule': crontab(minute=0, hour='*'),
-        # 'schedule': datetime.timedelta(seconds=2), /
+        # 'schedule': crontab(minute=0, hour='*'),
+        # 'schedule': datetime.timedelta(seconds=2), 
+        'schedule': crontab(minute='*/30'),
+
     },
 }
 

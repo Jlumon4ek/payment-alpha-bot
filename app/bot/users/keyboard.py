@@ -13,10 +13,10 @@ class UserKeyboard:
                 text="Подписка на МЕСЯЦ",
                 callback_data="subscription_month"
             ),
-            types.InlineKeyboardButton(
-                text="Подписка на ДЕНЬ",
-                callback_data="subscription_day"
-            )   
+            # types.InlineKeyboardButton(
+            #     text="Подписка на ДЕНЬ",
+            #     callback_data="subscription_day"
+            # )   
         ]
 
         for button in kb:

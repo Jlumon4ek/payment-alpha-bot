@@ -10,7 +10,7 @@ def extract_text_from_pdf(file_path):
             for page in reader.pages:
                 text += page.extract_text()
             # Improved regex pattern to capture date and time with optional text in between
-            match = re.search(r'Дата и время\s*(?:по [\w\s]+)?([\d\.\: ]+)', text)
+            match = re.search(r'Дата и время\s*(?:по [\w\s]+)?([\d]{2}\.[\d]{2}\.[\d]{4} [\d]{2}:[\d]{2}(?::[\d]{2})?)', text)
             if match:
                 date_time = match.group(1)
                 return True, date_time

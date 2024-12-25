@@ -36,7 +36,8 @@ class SubscriptionHandler:
                 data["customer_name"] = text.split("ФИО покупателя")[1].split("\n")[0].strip()
             if "ИИН/БИН продавца" in text:
                 data["iin_bin"] = text.split("ИИН/БИН продавца")[1].split("\n")[0].strip()
-            date_match = re.search(r'Дата и время\s*(?:по [\w\s]+)?([\d\.\: ]+)', text)
+            
+            date_match = re.search(r'Дата и время\s*(?:по [\w\s]+)?([\d]{2}\.[\d]{2}\.[\d]{4} [\d]{2}:[\d]{2}(?::[\d]{2})?)', text)
 
             if date_match:
                 data["payment_date"] = date_match.group(1)

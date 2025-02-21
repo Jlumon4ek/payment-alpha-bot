@@ -47,7 +47,8 @@ services:
       - payment-bot
     env_file:
       - ./app/.env
-    command: celery -A bot.subscription.tasks worker --loglevel=info
+    command: celery -A src.main_celery worker --loglevel=INFO
+
 
   celery-beat:
     container_name: celery-beat
@@ -61,7 +62,8 @@ services:
       - payment-bot
     env_file:
       - ./app/.env
-    command: celery -A bot.subscription.tasks beat --loglevel=info
+    command: celery -A src.main_celery beat --loglevel=INFO
+
 
 networks:
   payment-bot:

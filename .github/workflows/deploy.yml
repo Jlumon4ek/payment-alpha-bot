@@ -18,24 +18,25 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             # Проверяем существование директории
-            if [ -d "~/payment-alpha-bot" ]; then
+            if [ -d "/home/ubuntu/payment-alpha-bot" ]; then
               echo "Директория существует, выполняем обновление"
-              cd ~/payment-alpha-bot
+              cd /home/ubuntu/payment-alpha-bot
               git status
               git checkout main
-              git pull
+              git fetch
+              git reset --hard origin/main
               docker compose up -d --build
             else
               echo "Директория не существует, выполняем клонирование"
-              cd ~
+              cd /home/ubuntu
               git clone git@github.com:Jlumon4ek/payment-alpha-bot.git
-              cd ~/payment-alpha-bot
+              cd /home/ubuntu/payment-alpha-bot
               docker compose up -d --build
             fi
 
             # Проверяем результат
             echo "Текущий коммит в репозитории:"
-            cd ~/payment-alpha-bot
+            cd /home/ubuntu/payment-alpha-bot
             git log -1 --format="%H %s"
 
             echo "Список запущенных контейнеров:"

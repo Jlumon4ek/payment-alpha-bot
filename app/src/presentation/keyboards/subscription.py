@@ -2,6 +2,8 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from .base import BaseKeyboard
+from core.config import settings
+
 
 class SubscriptionKeyboard(BaseKeyboard):
     SUBSCRIPTION_BUTTONS = [
@@ -10,7 +12,7 @@ class SubscriptionKeyboard(BaseKeyboard):
     ]
 
     PAYMENT_BUTTONS = [
-        {"text": "✅ Перейти к оплате", "url": "https://pay.kaspi.kz/pay/vrxmbs3d"},
+        {"text": "✅ Перейти к оплате", "url": settings.PAYMENT_URL},
         {"text": "🧾 Я оплатил(а)",     "callback_data": "paid_{type}"},
         {"text": "⬅️ Назад",           "callback_data": "backToSub_{type}"}
     ]

@@ -9,6 +9,10 @@ from alembic import context
 from src.core.config import settings
 from src.domain.models import *
 from src.domain.models.base import BaseModel
+from src.domain.models.user import User
+from src.domain.models.payment import Payment
+from src.domain.models.subscription import Subscription
+from src.domain.models.admin import Admin
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

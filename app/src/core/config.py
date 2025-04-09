@@ -22,8 +22,17 @@ class TelegramSettings(BaseSettings):
 class RedisSettings(BaseSettings):
     REDIS: str
 
-class Settings(DatabaseSettings, TelegramSettings, RedisSettings):
+class RabbitMQSettings(BaseSettings):
+    RABBITMQ_DEFAULT_USER: str
+    RABBITMQ_DEFAULT_PASS: str
+
+    @property
+    def RABBITMQ_URL(self) -> str:
+        return f"amqp://{self.RABBITMQ_DEFAULT_USER}:{self.RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/"
+
+class Settings(DatabaseSettings, TelegramSettings, RedisSettings, RabbitMQSettings):
     COMPANY_NAME: str
+    PAYMENT_URL: str
     
     model_config = SettingsConfigDict(
         env_file = str(Path(__file__).parent.parent.parent / '.env')

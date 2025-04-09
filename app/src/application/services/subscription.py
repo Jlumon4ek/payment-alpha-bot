@@ -33,7 +33,6 @@ class SubscriptionService(BaseService):
     async def add_payment(
         self,
         telegram_id: int,
-        store_name: str,
         receipt_id: str,
         full_name: str,
         passport_id: str,
@@ -43,7 +42,6 @@ class SubscriptionService(BaseService):
         logger.info(f"Adding payment for user {telegram_id}, receipt {receipt_id}")
         return await self.payment_service.create(
             telegram_id=telegram_id,
-            store_name=store_name,
             receipt_id=receipt_id,
             full_name=full_name,
             passport_id=passport_id,
@@ -88,7 +86,6 @@ class SubscriptionService(BaseService):
         return await self._execute_with_session(operation)
 
     async def get_active_subscription(self, telegram_id: int):
-        """Получает активную подписку пользователя."""
         subscription = await self.get_by_field('telegram_id', telegram_id)
         if subscription:
             logger.debug(f"Found active subscription for user {telegram_id}")

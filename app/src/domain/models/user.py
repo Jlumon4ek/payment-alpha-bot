@@ -27,9 +27,6 @@ class User(BaseModel):
     def __repr__(self) -> str:
         return (
             f"<User("
-            f"id={self.id}, "
             f"telegram_id={self.telegram_id}, "
-            f"username={self.username}, "
-            f"full_name={self.full_name}"
             f")>"
         )

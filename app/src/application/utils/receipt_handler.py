@@ -23,7 +23,7 @@ class ReceiptHandler:
                 file.write(downloaded_file.read())
 
             text = self.pdf_parser.extract_text(file_path)
-            data = self.pdf_parser.extract_payment_data(text, settings.COMPANY_NAME)
+            data = self.pdf_parser.extract_payment_data(text)
 
             validation_result = await self._validate_payment_data(
                 data, subscription_type, telegram_id
@@ -49,7 +49,6 @@ class ReceiptHandler:
         #     if data["payment_date"].month != current_month:
         #         return False, "Дата платежа не соответствует текущему месяцу."
 
-        # Проверка суммы
         if "price" in data:
             min_price = 1490 if subscription_type == "month" else 499
             if data["price"] < min_price:
@@ -65,7 +64,6 @@ class ReceiptHandler:
     async def _create_subscription_records(self, data: dict, subscription_type: str, telegram_id: int):
         await self.subscription_service.add_payment(
             telegram_id=telegram_id,
-            store_name=data['store_name'],
             receipt_id=data['receipt_number'],
             full_name=data['customer_name'],
             passport_id=data['iin_bin'],
@@ -96,7 +94,9 @@ class ReceiptHandler:
                 subscription_end=new_end_date,
                 subscription_price=data['price'],
                 isActive=True,
-                subscription_type=subscription_type
+                subscription_type=subscription_type,
+                notified_24 = False,
+                notified_1 = False
             )
         else:
             await self.subscription_service.create(

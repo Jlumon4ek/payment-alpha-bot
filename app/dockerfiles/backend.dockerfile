@@ -15,6 +15,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip
+RUN pip install --upgrade pip wheel setuptools
 RUN pip install --no-cache-dir -r /app/requirements/requirements.txt
 
 COPY . /app

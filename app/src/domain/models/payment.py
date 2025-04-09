@@ -16,10 +16,6 @@ class Payment(BaseModel):
         ForeignKey('users.telegram_id', ondelete='SET NULL'), 
         nullable=False
     )
-    store_name: Mapped[str] = mapped_column(
-        String, 
-        nullable=False
-    )
     receipt_id: Mapped[str] = mapped_column(
         String, 
         nullable=False

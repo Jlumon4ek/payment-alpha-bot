@@ -21,6 +21,10 @@ def create_celery_app() -> Celery:
     )
     
     app.conf.timezone = 'UTC'
+    
+    # Добавьте эту строку для указания импортов задач
+    app.conf.imports = ['application.tasks.subscription']
+    
     return app
 
 celery_app = create_celery_app()

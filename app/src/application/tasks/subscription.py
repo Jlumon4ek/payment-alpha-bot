@@ -20,8 +20,9 @@ class SubscriptionTasks:
                 chat_id=settings.CHANNEL_ID, 
                 user_id=subscription.telegram_id
             )
-            await subscription_service.update_subscription(
-                subscription_id=subscription.id,
+            await subscription_service.update(
+                field_name="id",
+                field_value=subscription.id,
                 isActive=False
             )
 

@@ -35,10 +35,10 @@ class ReceiptHandler:
                 data, subscription_type, telegram_id
             )
 
-            return True, data
+            return True
 
         except Exception as e:
-            return False, f"Ошибка при обработке файла: {e}"
+            return False
         finally:
             if os.path.exists(file_path):
                 os.remove(file_path)

@@ -33,6 +33,7 @@ class RabbitMQSettings(BaseSettings):
 class Settings(DatabaseSettings, TelegramSettings, RedisSettings, RabbitMQSettings):
     COMPANY_NAME: str
     PAYMENT_URL: str
+    SENTRY_DSN : str
     
     model_config = SettingsConfigDict(
         env_file = str(Path(__file__).parent.parent.parent / '.env')

@@ -82,7 +82,14 @@ class SubscriptionHandlers:
         data = await state.get_data()
         subscription_type = data.get("subscription_type")
 
-        check_result, data = await receipt_handler.checkPdf(
+        if message is None or message.document is None:
+            await message.answer(
+                text = "Тек PDF форматындағы файлдарды жіберуіңізді өтінеміз.\n\nПожалуйста, отправьте только файлы в формате PDF.",
+                reply_markup=await subscription_keyboard.backButton(subscription_type)
+            )
+            return
+
+        check_result = await receipt_handler.checkPdf(
             file_id=message.document.file_id,
             subscription_type=subscription_type,
             telegram_id=message.from_user.id
@@ -108,7 +115,11 @@ class SubscriptionHandlers:
                 f"{channel_link.invite_link}"
             )
         else:
-            await message.answer(data)
+            await message.answer(
+                "Төлеміңізді растайтын құжатты тексеру кезінде қате пайда болды.\n\n"
+                "Произошла ошибка при проверке вашего чека.",
+                reply_markup=await subscription_keyboard.backButton(subscription_type)            
+            )
 
         await state.clear()
 

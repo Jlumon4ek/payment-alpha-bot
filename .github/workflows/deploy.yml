@@ -17,7 +17,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            # Проверяем существование директории
             if [ -d "/home/ubuntu/payment-alpha-bot" ]; then
               echo "Директория существует, выполняем обновление"
               cd /home/ubuntu/payment-alpha-bot
@@ -34,7 +33,6 @@ jobs:
               docker compose up -d --build
             fi
 
-            # Проверяем результат
             echo "Текущий коммит в репозитории:"
             cd /home/ubuntu/payment-alpha-bot
             git log -1 --format="%H %s"

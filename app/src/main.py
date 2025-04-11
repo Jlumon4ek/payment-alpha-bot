@@ -7,15 +7,15 @@ from core.config import settings
 import sentry_sdk
 
 async def main():
-
     logger = setup_logging()
 
-    if settings.SENTRY_DSN:
-        setup_sentry(
-            dsn=settings.SENTRY_DSN, 
-        )
-
     bot, dp = setup_bot()
+
+    sentry_middleware = setup_sentry(
+        dsn=settings.SENTRY_DSN,
+    )
+    
+    dp.update.middleware(sentry_middleware)
     
     bot_service = BotService(bot, dp, logger)
     await bot_service.start(router_list)

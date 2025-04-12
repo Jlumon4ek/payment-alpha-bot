@@ -1,5 +1,6 @@
 from aiogram import Router, types, Bot, F
 from aiogram.fsm.context import FSMContext
+import sentry_sdk
 from core.config import settings
 from datetime import datetime, timedelta
 from application.filters.user import UserFilter
@@ -101,8 +102,8 @@ class SubscriptionHandlers:
                     chat_id=settings.CHANNEL_ID,
                     user_id=message.from_user.id
                 )
-            except Exception:
-                pass
+            except Exception as e:
+                sentry_sdk.capture_exception(e)
 
             channel_link = await bot.create_chat_invite_link(
                 settings.CHANNEL_ID,
@@ -120,6 +121,8 @@ class SubscriptionHandlers:
                 "Произошла ошибка при проверке вашего чека.",
                 reply_markup=await subscription_keyboard.backButton(subscription_type)            
             )
+
+
 
         await state.clear()
 

@@ -13,17 +13,20 @@ class PdfParser:
     def extract_payment_data(text: str) -> Dict[str, any]:
         data = {}
                    
-        if "№ чека" in text:
-            data["receipt_number"] = text.split("№ чека")[1].split("\n")[0].strip()
+        match = re.search(r"(?:№ чека|Түбіртек №)\s*(.+)", text)
+        if match:
+            data["receipt_number"] = match.group(1).split("\n")[0].strip()
             
-        if "ФИО покупателя" in text:
-            data["customer_name"] = text.split("ФИО покупателя")[1].split("\n")[0].strip()
+        customer_match = re.search(r"(?:ФИО покупателя|Сатып алушының аты-жөні)\s*(.+)", text)
+        if customer_match:
+            data["customer_name"] = customer_match.group(1).split("\n")[0].strip()
             
-        if "ИИН/БИН продавца" in text:
-            data["iin_bin"] = text.split("ИИН/БИН продавца")[1].split("\n")[0].strip()
-            
+        iin_match = re.search(r"(?:ИИН/БИН продавца|Сатушының ЖСН/БСН)\s*(.+)", text)
+        if iin_match:
+            data["iin_bin"] = iin_match.group(1).split("\n")[0].strip()
+        
         date_match = re.search(
-            r'Дата и время\s*(?:по [\w\s]+)?([\d]{2}\.[\d]{2}\.[\d]{4} [\d]{2}:[\d]{2}(?::[\d]{2})?)',
+            r'(?:Дата и время|Күні мен уақыты)\s*(?:по [\w\s]+)?([\d]{2}\.[\d]{2}\.[\d]{4} [\d]{2}:[\d]{2}(?::[\d]{2})?)',
             text
         )
         if date_match:

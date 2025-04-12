@@ -1,6 +1,7 @@
 import os
 from datetime import datetime, timedelta
 from aiogram import Bot
+import sentry_sdk
 from core.config import settings
 from application.services.subscription import SubscriptionService, PaymentService
 from .pdf_parser import PdfParser
@@ -38,7 +39,10 @@ class ReceiptHandler:
             return True
 
         except Exception as e:
+            sentry_sdk.capture_exception(e)
             return False
+        
+
         finally:
             if os.path.exists(file_path):
                 os.remove(file_path)

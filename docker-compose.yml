@@ -51,6 +51,11 @@ services:
     command: celery -A src.main_celery worker --loglevel=INFO
     depends_on:
       - rabbitmq
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.5"
 
   celery-beat:
     container_name: celery-beat

@@ -3,6 +3,8 @@ from datetime import datetime
 from PyPDF2 import PdfReader
 from typing import Dict, Optional
 
+import sentry_sdk
+
 class PdfParser:    
     @staticmethod
     def extract_text(file_path: str) -> str:
@@ -45,5 +47,6 @@ class PdfParser:
         except ValueError:
             try:
                 return datetime.strptime(date_str, '%d.%m.%Y %H:%M')
-            except ValueError:
+            except ValueError as e:
+                sentry_sdk.capture_exception(f"Error parsing date: {e}")
                 return None

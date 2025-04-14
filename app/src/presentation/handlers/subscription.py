@@ -102,6 +102,13 @@ class SubscriptionHandlers:
                     chat_id=settings.CHANNEL_ID,
                     user_id=message.from_user.id
                 )
+
+                await bot.unban_chat_member(
+                    chat_id=settings.DISCUSSION_GROUP_ID,
+                    user_id=message.from_user.id
+                )
+
+
             except Exception as e:
                 sentry_sdk.capture_exception(e)
 

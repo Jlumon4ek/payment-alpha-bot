@@ -1,4 +1,5 @@
 import logging
+import sentry_sdk
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -16,14 +17,17 @@ class BaseService:
                 try:
                     return await operation(session)
                 except IntegrityError as e:
+                    sentry_sdk.capture_exception(e)
                     logger.error(f"Integrity error in {self.model.__name__}: {e.orig}")
                     await session.rollback()
                     raise
                 except SQLAlchemyError as e:
+                    sentry_sdk.capture_exception(e)
                     logger.error(f"SQLAlchemy error in {self.model.__name__}: {e}")
                     await session.rollback()
                     raise
                 except Exception as e:
+                    sentry_sdk.capture_exception(e)
                     logger.error(f"Unexpected error in {self.model.__name__}: {e}")
                     await session.rollback()
                     raise

@@ -29,6 +29,16 @@ class SubscriptionService(BaseService):
             
         return await self._execute_with_session(operation)
 
+    async def get_subscriptions(self):
+        async def operation(session):
+            query = select(self.model).where(
+                self.model.isActive == True
+            )
+            result = await session.execute(query)
+            subscriptions = result.scalars().all()
+            logger.info(f"Found {len(subscriptions)} expired subscriptions")
+            return subscriptions
+        return await self._execute_with_session(operation)
 
     async def add_payment(
         self,
@@ -92,3 +102,5 @@ class SubscriptionService(BaseService):
         else:
             logger.debug(f"No active subscription found for user {telegram_id}")
         return subscription
+    
+    

@@ -48,10 +48,10 @@ class ReceiptHandler:
                 os.remove(file_path)
 
     async def _validate_payment_data(self, data: dict, subscription_type: str, telegram_id: int):
-        # if "payment_date" in data:
-        #     current_month = datetime.now().month
-        #     if data["payment_date"].month != current_month:
-        #         return False, "Дата платежа не соответствует текущему месяцу."
+        if "payment_date" in data:
+            current_month = datetime.now().month
+            if data["payment_date"].month != current_month:
+                return False, "Дата платежа не соответствует текущему месяцу."
 
         if "price" in data:
             min_price = 1490 if subscription_type == "month" else 499

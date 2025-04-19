@@ -52,19 +52,19 @@ class ReceiptHandler:
         if "payment_date" in data:
             current_month = datetime.now().month
             if data["payment_date"].month != current_month:
-                sentry_sdk.capture_exception("Дата платежа не соответствует текущему месяцу.")
+                sentry_sdk.capture_message("Дата платежа не соответствует текущему месяцу.")
                 return False
 
         if "price" in data:
             min_price = 1490 if subscription_type == "month" else 499
             if data["price"] < min_price:
-                sentry_sdk.capture_exception("Неверная сумма платежа.")
+                sentry_sdk.capture_message("Неверная сумма платежа.")
                 return False
 
         if "receipt_number" in data:
             existing_receipt = await self.payment_service.get_by_receipt_id(data["receipt_number"])
             if existing_receipt:
-                sentry_sdk.capture_exception("Квитанция с таким номером уже существует.")
+                sentry_sdk.capture_message("Квитанция с таким номером уже существует.")
                 return False
 
         return True, None

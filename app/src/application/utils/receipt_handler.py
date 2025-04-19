@@ -27,9 +27,10 @@ class ReceiptHandler:
             data = self.pdf_parser.extract_payment_data(text)
 
             validation_result = await self._validate_payment_data(
-                data, subscription_type, telegram_id
+                data, subscription_type
             )
-            if not validation_result[0]:
+
+            if not validation_result:
                 return validation_result
 
             await self._create_subscription_records(
@@ -47,21 +48,24 @@ class ReceiptHandler:
             if os.path.exists(file_path):
                 os.remove(file_path)
 
-    async def _validate_payment_data(self, data: dict, subscription_type: str, telegram_id: int):
+    async def _validate_payment_data(self, data: dict, subscription_type: str):
         if "payment_date" in data:
             current_month = datetime.now().month
             if data["payment_date"].month != current_month:
-                return False, "Дата платежа не соответствует текущему месяцу."
+                sentry_sdk.capture_exception("Дата платежа не соответствует текущему месяцу.")
+                return False
 
         if "price" in data:
             min_price = 1490 if subscription_type == "month" else 499
             if data["price"] < min_price:
-                return False, f"Неверная сумма платежа. Минимальная сумма: {min_price} тг."
+                sentry_sdk.capture_exception("Неверная сумма платежа.")
+                return False
 
         if "receipt_number" in data:
             existing_receipt = await self.payment_service.get_by_receipt_id(data["receipt_number"])
             if existing_receipt:
-                return False, "Квитанция с таким номером уже существует."
+                sentry_sdk.capture_exception("Квитанция с таким номером уже существует.")
+                return False
 
         return True, None
 

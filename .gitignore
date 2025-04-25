@@ -5,3 +5,4 @@ data/
 !example.env
 backup.sql
 test.py
+session_name.session

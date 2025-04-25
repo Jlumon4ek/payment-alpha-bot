@@ -17,14 +17,14 @@ class SubscriptionKeyboard(BaseKeyboard):
         {"text": "⬅️ Назад",           "callback_data": "backToSub_{type}"}
     ]
 
-    async def subscription(self, subscription_type: str) -> types.InlineKeyboardMarkup:
-        return self._build_buttons(self.SUBSCRIPTION_BUTTONS, subscription_type)
+    async def subscription(self) -> types.InlineKeyboardMarkup:
+        return self._build_buttons(self.SUBSCRIPTION_BUTTONS, "month")
 
-    async def payment(self, subscription_type: str) -> types.InlineKeyboardMarkup:
-        return self._build_buttons(self.PAYMENT_BUTTONS, subscription_type)
+    async def payment(self) -> types.InlineKeyboardMarkup:
+        return self._build_buttons(self.PAYMENT_BUTTONS, "month")
 
-    async def backButton(self, subscription_type: str) -> types.InlineKeyboardMarkup:
-        return self.back_button(f"backToPay_{subscription_type}")
+    async def backButton(self) -> types.InlineKeyboardMarkup:
+        return self.back_button(f"backToPay_month")
 
     async def update_subscription(self) -> types.InlineKeyboardMarkup:
 

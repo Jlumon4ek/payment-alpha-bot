@@ -23,17 +23,17 @@ class SubscriptionHandlers:
     def setup_handlers(self):
         self.router.callback_query.register(
             self.subscription_handler,
-            F.data.in_({"subscription_month", "subscription_day", "backToSub_day", "backToSub_month"}),
+            F.data.in_({"subscription_month", "backToSub_day", "backToSub_month"}),
             UserFilter()
         )
         self.router.callback_query.register(
             self.pay_handler,
-            F.data.in_({"pay_month", "pay_day", "backToPay_month", "backToPay_day"}),
+            F.data.in_({"pay_month", "backToPay_month", "backToPay_day"}),
             UserFilter()
         )
         self.router.callback_query.register(
             self.paid_handler,
-            F.data.in_({"paid_month", "paid_day"}),
+            F.data.in_({"paid_month"}),
             UserFilter()
         )
         self.router.message.register(
@@ -49,50 +49,44 @@ class SubscriptionHandlers:
 
     async def subscription_handler(self, callback: types.CallbackQuery):
         await callback.answer()
-        subscription_type = callback.data.split("_")[1]
-        price, duration = self.get_subscription_details(subscription_type)
+        price, duration = 1490, "30 дней"
         
         await callback.message.answer(
             f"Срок подписки: {duration}\n\nСтоимость: {price} тг.",
-            reply_markup=await subscription_keyboard.subscription(subscription_type)
+            reply_markup=await subscription_keyboard.subscription()
         )
 
     async def pay_handler(self, callback: types.CallbackQuery):
         await callback.answer()
-        subscription_type = callback.data.split("_")[1]
-        price, duration = self.get_subscription_details(subscription_type)
+        price, duration = 1490, "30 дней"
         
         await callback.message.answer(
             f"Срок подписки: {duration}\n\nСтоимость: {price} тг.",
-            reply_markup=await subscription_keyboard.payment(subscription_type)
+            reply_markup=await subscription_keyboard.payment()
         )
 
     async def paid_handler(self, callback: types.CallbackQuery, state: FSMContext):
         await callback.answer()
-        subscription_type = callback.data.split("_")[1]
         
         await callback.message.answer(
             "Төлемді растайтын құжатты PDF форматында жіберуіңізді өтінеміз.\n\n"
             "Пожалуйста, отправьте квитанцию о платеже в формате PDF.",
-            reply_markup=await subscription_keyboard.backButton(subscription_type)
+            reply_markup=await subscription_keyboard.backButton()
         )
-        await state.update_data(subscription_type=subscription_type)
         await state.set_state(SendReceipt.receipt)
 
     async def send_receipt_handler(self, message: types.Message, state: FSMContext):
-        data = await state.get_data()
-        subscription_type = data.get("subscription_type")
 
         if message is None or message.document is None:
             await message.answer(
                 text = "Тек PDF форматындағы файлдарды жіберуіңізді өтінеміз.\n\nПожалуйста, отправьте только файлы в формате PDF.",
-                reply_markup=await subscription_keyboard.backButton(subscription_type)
+                reply_markup=await subscription_keyboard.backButton()
             )
             return
 
         check_result = await receipt_handler.checkPdf(
             file_id=message.document.file_id,
-            subscription_type=subscription_type,
+            subscription_type="month",
             telegram_id=message.from_user.id
         )
 
@@ -126,7 +120,7 @@ class SubscriptionHandlers:
             await message.answer(
                 "Төлеміңізді растайтын құжатты тексеру кезінде қате пайда болды.\n\n"
                 "Произошла ошибка при проверке вашего чека.",
-                reply_markup=await subscription_keyboard.backButton(subscription_type)            
+                reply_markup=await subscription_keyboard.backButton()            
             )
 
 

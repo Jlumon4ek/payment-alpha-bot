@@ -24,16 +24,16 @@ class UserHandlers:
 
     async def start(self, message: types.Message, command: CommandObject):
         await message.answer(
-            "Сәлеметсіз бе! Тарифты таңдаңыз.\n\n"
-            "Здравствуйте! Выберите тариф.",
+            "👋 Сәлеметсіз бе! Тарифты таңдаңыз.🚀\n\n"
+            "👋 Здравствуйте! Выберите тариф.🚀",
             reply_markup=await user_keyboard.start()
         )
 
     async def back_to_start(self, callback: types.CallbackQuery):
         await callback.answer()
         await callback.message.answer(
-            "Сәлеметсіз бе! Тарифты таңдаңыз.\n\n"
-            "Здравствуйте! Выберите тариф.",
+            "👋 Сәлеметсіз бе! Тарифты таңдаңыз.🚀\n\n"
+            "👋 Здравствуйте! Выберите тариф.🚀",
             reply_markup=await user_keyboard.start()
         )
 

@@ -1,6 +1,5 @@
 import logging
 import sentry_sdk
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from infrastructure.database.session import db

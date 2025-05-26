@@ -1,3 +1,4 @@
+import logging
 import os
 from datetime import datetime, timedelta
 from aiogram import Bot
@@ -41,6 +42,9 @@ class ReceiptHandler:
 
         except Exception as e:
             sentry_sdk.capture_exception(e)
+
+            logging.error(f"Error processing receipt: {e}")
+
             return False
         
 

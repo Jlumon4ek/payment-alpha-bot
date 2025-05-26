@@ -1,4 +1,3 @@
-# src/presentation/filters/admin.py
 from aiogram.types import Message
 from application.services.admin import AdminService
 from .base import BaseUserFilter

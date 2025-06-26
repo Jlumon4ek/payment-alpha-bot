@@ -108,7 +108,8 @@ class SubscriptionHandlers:
 
             channel_link = await bot.create_chat_invite_link(
                 settings.CHANNEL_ID,
-                member_limit=1
+                member_limit=1,
+                expire_date = datetime.now() + timedelta(days=2),
             )
 
             await message.answer(
@@ -122,8 +123,6 @@ class SubscriptionHandlers:
                 "Произошла ошибка при проверке вашего чека.",
                 reply_markup=await subscription_keyboard.backButton()            
             )
-
-
 
         await state.clear()
 

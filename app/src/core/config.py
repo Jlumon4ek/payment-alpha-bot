@@ -18,6 +18,8 @@ class TelegramSettings(BaseSettings):
     TOKEN: str
     CHANNEL_ID: str
     DISCUSSION_GROUP_ID: str
+    API_HASH: str
+    API_ID: int
 
 class RedisSettings(BaseSettings):
     REDIS: str

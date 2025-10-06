@@ -90,4 +90,8 @@ services:
 networks:
   payment-bot:
     driver: bridge
+
+volumes:
+  pgdata:
+    driver: local
   

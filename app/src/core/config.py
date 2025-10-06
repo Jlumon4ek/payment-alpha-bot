@@ -27,10 +27,11 @@ class RedisSettings(BaseSettings):
 class RabbitMQSettings(BaseSettings):
     RABBITMQ_DEFAULT_USER: str
     RABBITMQ_DEFAULT_PASS: str
+    RABBITMQ_HOST: str
 
     @property
     def RABBITMQ_URL(self) -> str:
-        return f"amqp://{self.RABBITMQ_DEFAULT_USER}:{self.RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/"
+        return f"amqp://{self.RABBITMQ_DEFAULT_USER}:{self.RABBITMQ_DEFAULT_PASS}@{self.RABBITMQ_HOST}:5672/"
 
 class Settings(DatabaseSettings, TelegramSettings, RedisSettings, RabbitMQSettings):
     COMPANY_NAME: str
